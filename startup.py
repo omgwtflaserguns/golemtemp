@@ -47,7 +47,7 @@ lcd = Adafruit_CharLCDPlate(1)
 lcd.clear()
 
 # Feld mit der aktuellen Seite
-currentPage = 43
+currentPage = 53
 
 while True:
     if currentPage == 1:
@@ -64,28 +64,35 @@ while True:
 
     if currentPage == 3:
         temp = run_cmd("/opt/vc/bin/vcgencmd measure_temp | cut -b 6-")
-        msg = "Temp\n" + temp
+        msg = "Temp Rasp\n" + temp
         display(lcd, msg, lcd.TEAL)
         currentPage = getNextPage(lcd, 2, 4, 3, 3, 3)
 
     if currentPage == 4:
+        temp_raw = run_cmd("cat /sys/bus/w1/devices/28-000007b38daf/w1_slave | grep t= | cut -b 30-32")
+        temp = "{}.{} C°".format(temp_raw[:2], temp_raw[-1])
+        msg = "Temp\n" + temp
+        display(lcd, msg, lcd.TEAL)
+        currentPage = getNextPage(lcd, 3, 5, 4, 4, 4)
+
+    if currentPage == 5:
         msg = "Shutdown?"
         display(lcd, msg, lcd.RED)
-        currentPage = getNextPage(lcd, 3, 1, 42, 42, 41)
+        currentPage = getNextPage(lcd, 4, 1, 52, 52, 51)
 
-    if currentPage == 41:
+    if currentPage == 51:
         shutdown()
         msg = "Shutting\ndown..."
         display(lcd, msg, lcd.RED)
         sleep(1)
         break
 
-    if currentPage == 42:
+    if currentPage == 52:
         msg = "Shutdown LCD?"
         display(lcd, msg, lcd.RED)
-        currentPage = getNextPage(lcd, 3, 1, 4, 4, 43)
+        currentPage = getNextPage(lcd, 4, 1, 5, 5, 53)
 
-    if currentPage == 43:
+    if currentPage == 53:
         msg = ""
         display(lcd, msg, lcd.OFF)
         currentPage = getNextPage(lcd, 1, 1, 1, 1, 1)
