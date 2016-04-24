@@ -69,8 +69,9 @@ while True:
         currentPage = getNextPage(lcd, 2, 4, 3, 3, 3)
 
     if currentPage == 4:
-        temp_raw = run_cmd("cat /sys/bus/w1/devices/28-000007b38daf/w1_slave | grep t= | cut -b 30-32")
-        temp = "{}.{} C°".format(temp_raw[:2], temp_raw[-1])
+        temp_raw = run_cmd("cat /sys/bus/w1/devices/28-000007b38daf/w1_slave")
+	temp_raw = temp_raw.split('\n')[1][29:32]
+        temp = "{}.{} C".format(temp_raw[:2], temp_raw[-1])
         msg = "Temp\n" + temp
         display(lcd, msg, lcd.TEAL)
         currentPage = getNextPage(lcd, 3, 5, 4, 4, 4)
