@@ -70,11 +70,16 @@ while True:
 
     if currentPage == 4:
         temp_raw = run_cmd("cat /sys/bus/w1/devices/28-000007b38daf/w1_slave")
-	temp_raw = temp_raw.split('\n')[1][29:32]
+        temp_raw = temp_raw.split('\n')[1][29:32]
         temp = "{}.{} C".format(temp_raw[:2], temp_raw[-1])
         msg = "Temp\n" + temp
         display(lcd, msg, lcd.TEAL)
-        currentPage = getNextPage(lcd, 3, 5, 4, 4, 4)
+        currentPage = getNextPage(lcd, 3, 5, 41, 41, 4)
+
+    if currentPage == 41:
+        errors = run_cmd("cat golemtemp.log | grep ERROR | wc -l")
+        display(lcd, "Errors: {}".format(errors))
+        currentPage = getNextPage(lcd, 3, 5, 4, 4, 41)
 
     if currentPage == 5:
         msg = "Shutdown?"
